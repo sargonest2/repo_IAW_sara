@@ -1,0 +1,40 @@
+#servicios a lanzar, bookmedik y mariadb. Sara.
+version: "3.9"
+
+services:
+  app:
+    build: ./build
+    container_name: contenedor_php
+    image: sara/bookmedik:v1
+    restart: always
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB:USER: ${DB_USER}
+      DB:PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - bk-network
+
+  db:
+    container_name: servidor_mysql
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - bk-network
+
+volumes:
+  mariadb_data:
+
+networks:
+  bk-network:
